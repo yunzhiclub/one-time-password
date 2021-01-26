@@ -1,5 +1,6 @@
 package club.yunzhi.otp;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +15,10 @@ import java.awt.event.ActionEvent;
  */
 @Component
 public class MainUi extends JFrame {
+  /**
+   * 有效时间提示
+   */
+  JLabel effectiveTimeLabel;
   /**
    * OTP服务
    */
@@ -63,6 +68,25 @@ public class MainUi extends JFrame {
   }
 
   /**
+   * 每1秒钟重新生成一次提示信息
+   * 每1分钟重新生成一个OTP
+   * 未使用@Scheduled(cron = "* 1/1 * * * *")的原因是第一个分钟的时候，未触发执行相应的方法
+   */
+  @Scheduled(fixedRate = 1000)
+  void reGenerateOtp() {
+    long second = System.currentTimeMillis() / 1000 % 60;
+    StringBuilder info = new StringBuilder();
+    for (long i = 0; i < 60 - second; i++) {
+      info.append(".");
+    }
+    this.effectiveTimeLabel.setText(info.toString());
+
+    if (second == 0 && !this.textField.getText().trim().isEmpty()) {
+      this.otpLabel.setText(this.oneTimePasswordService.generateOtp(this.textField.getText().trim()));
+    }
+  }
+
+  /**
    * 输入变更时，重设设置生成按钮的disabled状态
    */
   private void initTextField() {
@@ -78,6 +102,7 @@ public class MainUi extends JFrame {
   private void initLabel() {
     this.tokenLabel = new JLabel("Token");
     this.otpLabel = new JLabel(" ");
+    this.effectiveTimeLabel = new JLabel("............................................................");
   }
 
   /**
@@ -85,9 +110,9 @@ public class MainUi extends JFrame {
    */
   private void initQuitButton() {
     this.quitButton = new JButton("Quit");
-    this.quitButton.addActionListener((ActionEvent event) -> {
-      System.exit(0);
-    });
+    this.quitButton.addActionListener((ActionEvent event) ->
+        System.exit(0)
+    );
   }
 
   /**
@@ -96,9 +121,9 @@ public class MainUi extends JFrame {
   private void initSubmitButton() {
     this.submitButton = new JButton("生成OTP");
     this.submitButton.setEnabled(false);
-    submitButton.addActionListener((ActionEvent event) -> {
-      this.otpLabel.setText(this.oneTimePasswordService.generateOtp(this.textField.getText().trim()));
-    });
+    submitButton.addActionListener((ActionEvent event) ->
+        this.otpLabel.setText(this.oneTimePasswordService.generateOtp(this.textField.getText().trim()))
+    );
   }
 
   /**
@@ -121,6 +146,7 @@ public class MainUi extends JFrame {
                                                              .addComponent(this.tokenLabel)
                                                              .addComponent(this.textField)
                                               )
+                                              .addComponent(this.effectiveTimeLabel)
                                               .addGroup(groupLayout.createSequentialGroup()
                                                                    .addGap(90)
                                                                    .addComponent(this.submitButton)
@@ -134,6 +160,7 @@ public class MainUi extends JFrame {
                                             .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                                                  .addComponent(this.tokenLabel)
                                                                  .addComponent(this.textField))
+                                            .addComponent(this.effectiveTimeLabel)
                                             .addGroup(
                                                 groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                                            .addComponent(this.quitButton)

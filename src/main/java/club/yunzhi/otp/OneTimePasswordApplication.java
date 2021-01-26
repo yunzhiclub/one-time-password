@@ -1,9 +1,8 @@
 package club.yunzhi.otp;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 一次性密码 使用JFrame展示
@@ -11,6 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  * @author panjie
  */
 @SpringBootApplication
+@EnableScheduling
 public class OneTimePasswordApplication {
   /**
    * 启动方法
@@ -20,7 +20,6 @@ public class OneTimePasswordApplication {
    * @param args 接收参数
    */
   public static void main(String[] args) {
-
     new SpringApplicationBuilder(OneTimePasswordApplication.class)
         .headless(false).run(args);
   }

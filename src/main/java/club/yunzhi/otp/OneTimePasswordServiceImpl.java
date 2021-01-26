@@ -28,6 +28,6 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
     token = token + currentMinuteTimestamp;
     String md5Hex = DigestUtils.md5DigestAsHex(token.getBytes(StandardCharsets.UTF_8));
     String sha1 = DigestUtils.md5DigestAsHex(md5Hex.getBytes(StandardCharsets.UTF_8)).toUpperCase();
-    return sha1.substring(sha1.length() - 4);
+    return sha1.substring(sha1.length() - 6);
   }
 }
