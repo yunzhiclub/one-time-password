@@ -1,5 +1,7 @@
 package club.yunzhi.otp;
 
+import org.springframework.boot.Banner;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -21,6 +23,9 @@ public class OneTimePasswordApplication {
    */
   public static void main(String[] args) {
     new SpringApplicationBuilder(OneTimePasswordApplication.class)
-        .headless(false).run(args);
+        .web(WebApplicationType.NONE)
+        .headless(false)
+        .bannerMode(Banner.Mode.OFF)
+        .run(args);
   }
 }

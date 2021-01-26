@@ -8,3 +8,5 @@ UI使用了Swing，对部分组件不熟悉的情况下，可在idea的帮助下
 `file -> new ->  Swing UI designer -> GUI Form`
 
 生成一个Form，然后在Idea的帮助下查看Swing都有什么组件类型。
+
+`@SpringBootTest`设置`java.awt.headless`的默认值为`true`，在单元测试中应该将其设置为`false`，代码可参考：`OneTimePasswordApplicationTests`.
